@@ -1,10 +1,11 @@
-import express from 'express';
-import { router } from './qrcodes';
-const app = express();
+export { defaultCreateBase, readBarCodes, writeBarCodes } from './barcodes-handler';
 
-app.use(router);
-
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+export type {
+  CompositeContent,
+  CreateBase,
+  GenericPositioning,
+  ImageDataWithColorSpace,
+  Location,
+  WriterOptionsBarCodes,
+  WriterOptionsOutput,
+} from './types';

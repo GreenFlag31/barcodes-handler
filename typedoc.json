@@ -1,0 +1,16 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "exclude": ["**/test/**", "**/*.spec.ts", "**/node_modules/**"],
+  "includeVersion": true,
+  "name": "barcodes-handler",
+  "lang": "en",
+  "excludeExternals": true,
+  "excludeInternal": true,
+
+  "plugin": ["typedoc-github-theme"],
+  "theme": "typedoc-github-theme",
+
+  "disableSources": true,
+  "hideGenerator": true
+}
