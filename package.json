@@ -10,17 +10,17 @@
     "barcode-reader",
     "barcode-writer"
   ],
-  "homepage": "https://github.com/GreenFlag31/regex-helper#readme",
+  "homepage": "https://github.com/GreenFlag31/barcodes-handler#readme",
   "bugs": {
-    "url": "https://github.com/GreenFlag31/regex-helper/issues"
+    "url": "https://github.com/GreenFlag31/barcodes-handler/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GreenFlag31/regex-helper.git"
+    "url": "git+https://github.com/GreenFlag31/barcodes-handler.git"
   },
   "license": "MIT",
   "author": "Manu Claeys <unam31@gmail.com>",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && @powershell copy './package.json' 'dist/' && @powershell copy 'README.md' 'dist/' ",

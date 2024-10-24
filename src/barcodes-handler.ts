@@ -37,9 +37,7 @@ export const defaultCreateBase: CreateBase = {
 };
 
 setZXingModuleOverrides({
-  wasmBinary: readFileSync(
-    resolve(__dirname, '../node_modules/zxing-wasm/dist/full/zxing_full.wasm')
-  ),
+  wasmBinary: readFileSync(resolve(__dirname, '../zxing-wasm/dist/full/zxing_full.wasm')),
 });
 
 getZXingModule();
@@ -229,7 +227,7 @@ async function retrieveImageData(imagePath: string): Promise<any> {
   const { width, height } = await image.metadata();
   assert(width && height, 'Impossible to retrieve image metadata.');
 
-  const rawImageData = await image.raw().ensureAlpha().toBuffer();
+  const rawImageData = await image.raw().toBuffer();
   const imageDataWithColorSpace: ImageDataWithColorSpace = {
     data: rawImageData,
     width,
@@ -250,10 +248,8 @@ function calculatePosition(
   const MARGIN = 10;
   const atRight = containerWidth - elementWidth - MARGIN;
   const atBottom = containerHeight - elementHeight - MARGIN;
-  const middleTop =
-    Math.floor(containerHeight / 2) - Math.floor(elementHeight / 2) - Math.floor(MARGIN / 2);
-  const middleLeft =
-    Math.floor(containerWidth / 2) - Math.floor(elementWidth / 2) - Math.floor(MARGIN / 2);
+  const middleTop = Math.floor(containerHeight / 2 - elementHeight / 2 - MARGIN / 2);
+  const middleLeft = Math.floor(containerWidth / 2 - elementWidth / 2 - MARGIN / 2);
 
   switch (position) {
     case 'top-left':
