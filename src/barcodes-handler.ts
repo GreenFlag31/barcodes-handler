@@ -36,12 +36,6 @@ export const defaultCreateBase: CreateBase = {
   background: { r: 255, g: 255, b: 255 },
 };
 
-const originalFetch = global.fetch;
-global.fetch = async function (...args) {
-  console.log('Fetch request:', args);
-  return originalFetch.apply(this, args);
-};
-
 setZXingModuleOverrides({
   wasmBinary: readFileSync(
     resolve(__dirname, '../node_modules/zxing-wasm/dist/full/zxing_full.wasm')
