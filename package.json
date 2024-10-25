@@ -1,6 +1,6 @@
 {
   "name": "barcodes-handler",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A lightweight Node.js library for reading and writing multiple barcodes on a single image.",
   "keywords": [
     "barcodes",
