@@ -4,7 +4,6 @@ export type {
   CompositeContent,
   CreateBase,
   GenericPositioning,
-  ImageDataWithColorSpace,
   Location,
   WriterOptionsBarCodes,
   WriterOptionsOutput,

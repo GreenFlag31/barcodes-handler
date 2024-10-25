@@ -2,16 +2,6 @@ import sharp, { Create } from 'sharp';
 import { WriterOptions } from 'zxing-wasm';
 
 /**
- * @internal
- */
-export interface ImageDataWithColorSpace {
-  data: Buffer;
-  width: number;
-  height: number;
-  colorSpace: PredefinedColorSpace;
-}
-
-/**
  * Precise location of the barcode.
  */
 export interface Location {

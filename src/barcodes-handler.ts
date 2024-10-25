@@ -10,15 +10,9 @@ import {
   writeBarcodeToImageFile,
   type WriterOptions,
 } from 'zxing-wasm';
-import {
-  CompositeContent,
-  CreateBase,
-  GenericPositioning,
-  ImageDataWithColorSpace,
-  WriterOptionsBarCodes,
-} from './types';
+import { CompositeContent, CreateBase, GenericPositioning, WriterOptionsBarCodes } from './types';
 import { promises } from 'node:fs';
-import { log } from 'console';
+import { createCanvas, loadImage } from 'canvas';
 
 const defaultWriterOptions: WriterOptionsBarCodes = {
   content: '',
@@ -123,12 +117,11 @@ export async function writeBarCodes(
 
 async function createMultipleImages(imagesResolved: ArrayBuffer[], outputImage: string) {
   const resultingImages: Promise<sharp.OutputInfo>[] = [];
-  const directory = path.parse(outputImage).dir;
+  const { dir: directory, name: basePath } = path.parse(outputImage);
   const extension = path.extname(outputImage);
 
   let index = 1;
   for (const imageArrayBuffer of imagesResolved) {
-    const basePath = path.parse(outputImage).name;
     const imageName = `${basePath}-${index.toString().padStart(3, '0')}${extension}`;
     const completeName = `${directory}/${imageName}`;
 
@@ -153,11 +146,8 @@ async function getCompositeContents(
   const { width: containerWidth, height: containerHeight } = await baseImage.metadata();
 
   for (const imageArrayBuffer of imagesResolved) {
-    const imageBuffer = Buffer.from(imageArrayBuffer);
-
     const currentOption = writerOptionsBarCodes[index];
     const { position, width: elementWidth, height: elementHeight, location } = currentOption;
-    log(containerWidth, containerHeight, elementWidth, elementHeight);
 
     assert(
       containerWidth && containerHeight && elementWidth && elementHeight,
@@ -178,7 +168,7 @@ async function getCompositeContents(
       calculatePosition(position, containerWidth, containerHeight, elementWidth, elementHeight);
 
     compositeContents.push({
-      input: imageBuffer,
+      input: Buffer.from(imageArrayBuffer),
       ...located,
     });
     index += 1;
@@ -212,7 +202,7 @@ function createBaseImage(baseImage?: string | CreateBase) {
  */
 export async function readBarCodes(existingImage: string, readerOptions?: ReaderOptions) {
   try {
-    const imgData = await retrieveImageData(existingImage);
+    const imgData = await getImageDataFromFile(existingImage);
     const imageFileReadResults = await readBarcodesFromImageData(imgData, readerOptions);
 
     return imageFileReadResults;
@@ -221,21 +211,17 @@ export async function readBarCodes(existingImage: string, readerOptions?: Reader
   }
 }
 
-async function retrieveImageData(imagePath: string): Promise<any> {
-  const image = sharp(imagePath);
+async function getImageDataFromFile(imagePath: string): Promise<any> {
+  const image = await loadImage(imagePath);
 
-  const { width, height } = await image.metadata();
-  assert(width && height, 'Impossible to retrieve image metadata.');
+  const { width, height } = image;
+  const canvas = createCanvas(width, height);
+  const context = canvas.getContext('2d');
 
-  const rawImageData = await image.raw().toBuffer();
-  const imageDataWithColorSpace: ImageDataWithColorSpace = {
-    data: rawImageData,
-    width,
-    height,
-    colorSpace: 'srgb',
-  };
+  context.drawImage(image, 0, 0, width, height);
 
-  return imageDataWithColorSpace;
+  const imageData = context.getImageData(0, 0, width, height);
+  return imageData;
 }
 
 function calculatePosition(
