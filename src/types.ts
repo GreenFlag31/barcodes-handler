@@ -39,7 +39,7 @@ export interface WriterOptionsBarCodes extends WriterOptions {
   position?: GenericPositioning;
 }
 
-export type WriterOptionsOutput = sharp.OutputInfo & { success: true };
+export type WriterOptionsOutput = { success: true } & { created: sharp.OutputInfo[] };
 
 /**
  * @internal

@@ -8,3 +8,4 @@ export type {
   WriterOptionsBarCodes,
   WriterOptionsOutput,
 } from './types';
+export type { ReaderOptions } from 'zxing-wasm';

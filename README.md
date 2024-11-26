@@ -1,6 +1,6 @@
 # barcodes-handler
 
-**barcodes-handler** is a lightweight Node.js library that allows reading and writing multiple barcodes (including QR codes) on a single image. It acts as a simple wrapper around the `zxing-wasm`, `sharp` and `canvas` libraries, ensuring seamless barcode processing with minimal effort.
+**barcodes-handler** is a lightweight Node.js library that allows reading and writing multiple barcodes (including QR codes) on a single image. It acts as a simple wrapper around the `zxing-wasm`, `sharp` and `napi-rs/canvas` libraries, ensuring seamless barcode processing with minimal effort.
 
 - 🚀 Read multiple barcodes in an image in approx. 200ms, write multiple barcodes in an image in approx. 50ms.
 - ✅ All binaries are included in the package, so there is no need to fetch anything from a CDN.
@@ -65,3 +65,7 @@ console.log('Created images:', createdImages);
 const createdImages = await writeBarCodes([code1, code2], outputImage);
 console.log('Created images:', createdImages);
 ```
+
+## Change logs
+
+V0.0.4: Replacing canvas by napi-rs/canvas, adding tests.

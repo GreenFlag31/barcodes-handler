@@ -10,9 +10,15 @@ import {
   writeBarcodeToImageFile,
   type WriterOptions,
 } from 'zxing-wasm';
-import { CompositeContent, CreateBase, GenericPositioning, WriterOptionsBarCodes } from './types';
+import {
+  CompositeContent,
+  CreateBase,
+  GenericPositioning,
+  WriterOptionsBarCodes,
+  WriterOptionsOutput,
+} from './types';
 import { promises } from 'node:fs';
-import { createCanvas, loadImage } from 'canvas';
+import { createCanvas, loadImage } from '@napi-rs/canvas';
 
 const defaultWriterOptions: WriterOptionsBarCodes = {
   content: '',
@@ -77,7 +83,7 @@ export async function writeBarCodes(
   writerOptionsBarCodes: WriterOptionsBarCodes[],
   outputImage: string,
   baseImage?: string | CreateBase
-) {
+): Promise<WriterOptionsOutput> {
   const writerImagesPromises: Promise<ArrayBuffer>[] = [];
 
   for (let index = 0; index < writerOptionsBarCodes.length; index++) {
@@ -95,8 +101,8 @@ export async function writeBarCodes(
 
     if (!baseImage) {
       // no image support, print images one by one
-      const createdImages = await createMultipleImages(imagesResolved, outputImage);
-      return { success: true, createdImages };
+      const created = await createMultipleImages(imagesResolved, outputImage);
+      return { success: true, created };
     }
 
     const image = createBaseImage(baseImage);
@@ -108,10 +114,9 @@ export async function writeBarCodes(
 
     const resultingImage = await image.composite(compositeContents).toFile(outputImage);
 
-    return { success: true, ...resultingImage };
-  } catch (error) {
-    console.error('Error processing image:', error);
-    return { success: false };
+    return { success: true, created: [resultingImage] };
+  } catch (error: any) {
+    throw new Error('Error processing image: ' + error);
   }
 }
 
@@ -207,7 +212,7 @@ export async function readBarCodes(existingImage: string, readerOptions?: Reader
 
     return imageFileReadResults;
   } catch (error) {
-    console.error('Error processing image:', error);
+    throw new Error('Error processing image: ' + error);
   }
 }
 
